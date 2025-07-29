@@ -8,26 +8,33 @@ const toggleTheme = document.getElementById("toggleTheme");
 // 🎵 Sound feedback
 const newQuoteSound = new Audio("https://cdn.jsdelivr.net/gh/napthedev/assets/sounds/pop.mp3");
 
-// 🌍 Fetch from stable API (Quotable)
+// 🌍 Fetch from Quotable API with full error handling
 async function fetchQuote() {
-  try {
-    quoteText.innerHTML = `<span class="loading-icon">⏳</span> Loading...`;
-    quoteAuthor.textContent = "";
+  quoteText.innerHTML = `<span class="loading-icon">⏳</span> Loading...`;
+  quoteAuthor.textContent = "";
 
-    const res = await fetch("https://api.quotable.io/random");
+  try {
+    const res = await fetch("https://api.quotable.io/random", { cache: "no-store" });
+    if (!res.ok) throw new Error(`API returned ${res.status}`);
+
     const data = await res.json();
+    if (!data.content || !data.author) throw new Error("Invalid quote data");
 
     quoteText.textContent = `"${data.content}"`;
     quoteAuthor.textContent = `— ${data.author}`;
 
-    newQuoteSound.play();
+    newQuoteSound.play().catch(() => {
+      console.warn("Sound failed to play. Possibly blocked by browser.");
+    });
+
   } catch (e) {
-    quoteText.textContent = "Something went wrong. Try again.";
-    quoteAuthor.textContent = "😢";
+    console.error("Fetch error:", e);
+    quoteText.textContent = `"Be yourself; everyone else is already taken."`;
+    quoteAuthor.textContent = "— Oscar Wilde";
   }
 }
 
-// 📋 Copy quote with feedback
+// 📋 Copy quote with visual feedback
 function copyQuote() {
   const fullQuote = `${quoteText.textContent} ${quoteAuthor.textContent}`;
   navigator.clipboard.writeText(fullQuote).then(() => {
@@ -39,63 +46,71 @@ function copyQuote() {
   });
 }
 
-// 📤 Share quote
+// 📤 Share quote via native share or fallback
 function shareQuote() {
   const fullQuote = `${quoteText.textContent} ${quoteAuthor.textContent}`;
   if (navigator.share) {
-    navigator.share({ text: fullQuote });
+    navigator.share({ text: fullQuote }).catch(() => {
+      alert("Sharing was canceled or failed.");
+    });
   } else {
     alert("Sharing not supported on this browser.");
   }
 }
 
-// 🌓 Toggle theme + save
+// 🌓 Toggle theme & persist
 function applyTheme(saved = false) {
-  const isDark = saved ? localStorage.getItem("theme") === "dark" : !document.body.classList.contains("dark");
-  document.body.classList.toggle("dark", isDark);
-  toggleTheme.innerHTML = isDark ? `☀️` : `🌙`;
-  localStorage.setItem("theme", isDark ? "dark" : "light");
+  const currentIsDark = document.body.classList.contains("dark");
+  const newIsDark = saved ? localStorage.getItem("theme") === "dark" : !currentIsDark;
+
+  document.body.classList.toggle("dark", newIsDark);
+  toggleTheme.innerHTML = newIsDark ? `☀️` : `🌙`;
+  localStorage.setItem("theme", newIsDark ? "dark" : "light");
 }
 
-// 🧠 Restore saved theme
+// 🧠 Restore theme from memory
 function restoreTheme() {
   const theme = localStorage.getItem("theme");
   if (theme === "dark") document.body.classList.add("dark");
   toggleTheme.innerHTML = document.body.classList.contains("dark") ? `☀️` : `🌙`;
 }
 
-// 🔄 Button actions
+// 🔘 Button actions
 newQuoteBtn.onclick = fetchQuote;
 copyBtn.onclick = copyQuote;
 shareBtn.onclick = shareQuote;
 toggleTheme.onclick = () => applyTheme(false);
 
-// 🚀 Init
+// 🚀 Initial load
 fetchQuote();
 restoreTheme();
 
-// 🎆 particles.js background
-particlesJS("particles-js", {
-  particles: {
-    number: { value: 60 },
-    color: { value: "#60a5fa" },
-    shape: { type: "circle" },
-    opacity: { value: 0.4 },
-    size: { value: 4, random: true },
-    line_linked: {
-      enable: true,
-      distance: 150,
-      color: "#60a5fa",
-      opacity: 0.2,
-      width: 1,
+// 🎆 particles.js animated background
+if (typeof particlesJS !== "undefined") {
+  particlesJS("particles-js", {
+    particles: {
+      number: { value: 60 },
+      color: { value: "#60a5fa" },
+      shape: { type: "circle" },
+      opacity: { value: 0.4 },
+      size: { value: 4, random: true },
+      line_linked: {
+        enable: true,
+        distance: 150,
+        color: "#60a5fa",
+        opacity: 0.2,
+        width: 1,
+      },
+      move: { enable: true, speed: 2 },
     },
-    move: { enable: true, speed: 2 },
-  },
-  interactivity: {
-    detect_on: "canvas",
-    events: {
-      onhover: { enable: true, mode: "repulse" },
+    interactivity: {
+      detect_on: "canvas",
+      events: {
+        onhover: { enable: true, mode: "repulse" },
+      },
     },
-  },
-  retina_detect: true,
-});
+    retina_detect: true,
+  });
+} else {
+  console.warn("particles.js not loaded.");
+}
