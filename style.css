@@ -10,6 +10,7 @@
   --text: #111;
   --card: rgba(255, 255, 255, 0.75);
   --accent: #3b82f6;
+  --accent-dark: #2563eb;
 }
 
 body.dark {
@@ -17,10 +18,11 @@ body.dark {
   --text: #fff;
   --card: rgba(40, 40, 60, 0.7);
   --accent: #60a5fa;
+  --accent-dark: #3b82f6;
 }
 
 body {
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
   background-color: var(--bg);
   color: var(--text);
   min-height: 100vh;
@@ -30,6 +32,7 @@ body {
   transition: background 0.3s, color 0.3s;
   overflow: hidden;
   position: relative;
+  padding: 1rem;
 }
 
 /* Particles background */
@@ -42,16 +45,19 @@ body {
   left: 0;
 }
 
+/* Container */
 .container {
-  width: 90%;
+  width: 100%;
   max-width: 500px;
   background: var(--card);
   backdrop-filter: blur(25px);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 
+/* Header */
 header {
   display: flex;
   justify-content: space-between;
@@ -61,6 +67,7 @@ header {
 header h1 {
   font-size: 2rem;
   color: var(--accent);
+  user-select: none;
 }
 
 #toggleTheme {
@@ -69,8 +76,14 @@ header h1 {
   font-size: 1.5rem;
   cursor: pointer;
   color: var(--text);
+  transition: transform 0.2s ease;
 }
 
+#toggleTheme:active {
+  transform: scale(0.9);
+}
+
+/* Main */
 main {
   margin-top: 2rem;
 }
@@ -78,12 +91,19 @@ main {
 #quoteBox {
   padding: 1rem;
   border-left: 4px solid var(--accent);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
   margin-bottom: 1.5rem;
+}
+
+body.dark #quoteBox {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 #quoteText {
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
+  line-height: 1.5;
 }
 
 #quoteAuthor {
@@ -93,6 +113,7 @@ main {
   opacity: 0.7;
 }
 
+/* Controls */
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -108,16 +129,31 @@ button {
   border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
-  transition: background 0.3s ease;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.3s ease, transform 0.15s ease;
 }
 
 button:hover {
-  background: #2563eb;
+  background: var(--accent-dark);
 }
 
+button:active {
+  transform: scale(0.97);
+}
+
+.icon {
+  font-size: 1.1em;
+}
+
+/* Footer */
 footer {
   text-align: center;
   margin-top: 2rem;
   font-size: 0.9rem;
   opacity: 0.6;
+  user-select: none;
 }
