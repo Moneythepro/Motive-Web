@@ -4,6 +4,7 @@ const newQuoteBtn = document.getElementById("newQuote");
 const copyBtn = document.getElementById("copyQuote");
 const shareBtn = document.getElementById("shareQuote");
 const toggleTheme = document.getElementById("toggleTheme");
+const toggleIcon = toggleTheme.querySelector("i");
 
 // 🎵 Sound feedback
 const newQuoteSound = new Audio("https://cdn.jsdelivr.net/gh/napthedev/assets/sounds/pop.mp3");
@@ -28,7 +29,7 @@ async function fetchQuote() {
     });
 
   } catch (e) {
-    console.error("Fetch error:", e);
+    console.error("Fetch error:", e.message || e);
     quoteText.textContent = `"Be yourself; everyone else is already taken."`;
     quoteAuthor.textContent = "— Oscar Wilde";
   }
@@ -38,10 +39,10 @@ async function fetchQuote() {
 function copyQuote() {
   const fullQuote = `${quoteText.textContent} ${quoteAuthor.textContent}`;
   navigator.clipboard.writeText(fullQuote).then(() => {
-    copyBtn.innerHTML = `<span class="icon">✅</span> Copied!`;
+    copyBtn.innerHTML = `<i class="fas fa-check icon"></i> Copied!`;
     navigator.vibrate?.(100);
     setTimeout(() => {
-      copyBtn.innerHTML = `<span class="icon">📋</span> Copy`;
+      copyBtn.innerHTML = `<i class="fas fa-copy icon"></i> Copy`;
     }, 1500);
   });
 }
@@ -64,7 +65,9 @@ function applyTheme(saved = false) {
   const newIsDark = saved ? localStorage.getItem("theme") === "dark" : !currentIsDark;
 
   document.body.classList.toggle("dark", newIsDark);
-  toggleTheme.innerHTML = newIsDark ? `☀️` : `🌙`;
+  if (toggleIcon) {
+    toggleIcon.className = newIsDark ? "fas fa-sun" : "fas fa-moon";
+  }
   localStorage.setItem("theme", newIsDark ? "dark" : "light");
 }
 
@@ -72,7 +75,10 @@ function applyTheme(saved = false) {
 function restoreTheme() {
   const theme = localStorage.getItem("theme");
   if (theme === "dark") document.body.classList.add("dark");
-  toggleTheme.innerHTML = document.body.classList.contains("dark") ? `☀️` : `🌙`;
+
+  if (toggleIcon) {
+    toggleIcon.className = document.body.classList.contains("dark") ? "fas fa-sun" : "fas fa-moon";
+  }
 }
 
 // 🔘 Button actions
