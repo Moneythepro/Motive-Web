@@ -83,6 +83,10 @@ header h1 {
   transform: scale(0.9);
 }
 
+#toggleTheme i {
+  font-size: 1.4rem;
+}
+
 /* Main */
 main {
   margin-top: 2rem;
@@ -145,8 +149,11 @@ button:active {
   transform: scale(0.97);
 }
 
-.icon {
-  font-size: 1.1em;
+/* Icon style for all icons (Font Awesome or custom) */
+.icon,
+button i {
+  font-size: 1.2em;
+  display: inline-block;
 }
 
 /* Footer */
