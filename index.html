@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inspire | Daily Motivation</title>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="favicon.png" type="image/png" />
@@ -11,6 +13,9 @@
 
   <!-- particles.js -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+  <!-- Icon Library (Font Awesome) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-H5fR8l0BoCXkpj8HkHaAjr7IXxE3T9uZIGJe8eCSmhNtvY/yD6xB3FbIQk3YP8DZWX6etRbMVnAApe4T+z8LkQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
   <!-- Particles Background -->
@@ -20,7 +25,7 @@
   <div class="container">
     <header>
       <h1>Inspire</h1>
-      <button id="toggleTheme" title="Toggle Theme">🌙</button>
+      <button id="toggleTheme" title="Toggle Theme"><i class="fas fa-moon"></i></button>
     </header>
 
     <main>
@@ -30,23 +35,25 @@
       </div>
 
       <div class="controls">
-        <button id="newQuote"><span class="icon">✨</span> New Quote</button>
-        <button id="copyQuote"><span class="icon">📋</span> Copy</button>
-        <button id="shareQuote"><span class="icon">🔗</span> Share</button>
+        <button id="newQuote"><i class="fas fa-magic icon"></i> New Quote</button>
+        <button id="copyQuote"><i class="fas fa-copy icon"></i> Copy</button>
+        <button id="shareQuote"><i class="fas fa-share-alt icon"></i> Share</button>
       </div>
     </main>
 
     <footer>
-      <p>Made with 💖 by ChatGPT</p>
+      <p>Made with 💖 by MoneyThePro</p>
     </footer>
   </div>
 
   <!-- Logic -->
   <script src="script.js"></script>
   <script>
-    // PWA: Register service worker
+    // ✅ PWA: Register service worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("Service Worker Registered"))
+        .catch(err => console.warn("SW Registration Failed:", err));
     }
   </script>
 </body>
