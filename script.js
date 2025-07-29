@@ -8,18 +8,17 @@ const toggleTheme = document.getElementById("toggleTheme");
 // 🎵 Sound feedback
 const newQuoteSound = new Audio("https://cdn.jsdelivr.net/gh/napthedev/assets/sounds/pop.mp3");
 
-// 🌍 Fetch from API
+// 🌍 Fetch from stable API (Quotable)
 async function fetchQuote() {
   try {
-    quoteText.textContent = "Loading...";
+    quoteText.innerHTML = `<span class="loading-icon">⏳</span> Loading...`;
     quoteAuthor.textContent = "";
 
-    const res = await fetch("https://zenquotes.io/api/random");
+    const res = await fetch("https://api.quotable.io/random");
     const data = await res.json();
 
-    const quote = data[0];
-    quoteText.textContent = `"${quote.q}"`;
-    quoteAuthor.textContent = `— ${quote.a}`;
+    quoteText.textContent = `"${data.content}"`;
+    quoteAuthor.textContent = `— ${data.author}`;
 
     newQuoteSound.play();
   } catch (e) {
@@ -28,13 +27,15 @@ async function fetchQuote() {
   }
 }
 
-// 📋 Copy quote
+// 📋 Copy quote with feedback
 function copyQuote() {
   const fullQuote = `${quoteText.textContent} ${quoteAuthor.textContent}`;
   navigator.clipboard.writeText(fullQuote).then(() => {
-    copyBtn.textContent = "✅ Copied!";
+    copyBtn.innerHTML = `<span class="icon">✅</span> Copied!`;
     navigator.vibrate?.(100);
-    setTimeout(() => (copyBtn.textContent = "📋 Copy"), 1500);
+    setTimeout(() => {
+      copyBtn.innerHTML = `<span class="icon">📋</span> Copy`;
+    }, 1500);
   });
 }
 
@@ -48,32 +49,32 @@ function shareQuote() {
   }
 }
 
-// 🌓 Theme toggle + memory
+// 🌓 Toggle theme + save
 function applyTheme(saved = false) {
   const isDark = saved ? localStorage.getItem("theme") === "dark" : !document.body.classList.contains("dark");
   document.body.classList.toggle("dark", isDark);
-  toggleTheme.textContent = isDark ? "☀️" : "🌙";
+  toggleTheme.innerHTML = isDark ? `☀️` : `🌙`;
   localStorage.setItem("theme", isDark ? "dark" : "light");
 }
 
-// 🧠 Restore theme on load
+// 🧠 Restore saved theme
 function restoreTheme() {
   const theme = localStorage.getItem("theme");
   if (theme === "dark") document.body.classList.add("dark");
-  toggleTheme.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+  toggleTheme.innerHTML = document.body.classList.contains("dark") ? `☀️` : `🌙`;
 }
 
-// 🔄 Event listeners
+// 🔄 Button actions
 newQuoteBtn.onclick = fetchQuote;
 copyBtn.onclick = copyQuote;
 shareBtn.onclick = shareQuote;
 toggleTheme.onclick = () => applyTheme(false);
 
-// 🌟 Init
+// 🚀 Init
 fetchQuote();
 restoreTheme();
 
-// 🎆 particles.js config
+// 🎆 particles.js background
 particlesJS("particles-js", {
   particles: {
     number: { value: 60 },
