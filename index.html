@@ -7,18 +7,20 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="favicon.png" type="image/png" />
+  <meta name="theme-color" content="#60a5fa" />
 
-  <!-- particles.js library -->
+  <!-- particles.js -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 </head>
 <body>
-  <!-- Particles canvas -->
+  <!-- Particles Background -->
   <div id="particles-js"></div>
 
+  <!-- Main Content -->
   <div class="container">
     <header>
       <h1>Inspire</h1>
-      <button id="toggleTheme">🌙</button>
+      <button id="toggleTheme" title="Toggle Theme">🌙</button>
     </header>
 
     <main>
@@ -26,10 +28,11 @@
         <p id="quoteText">Loading...</p>
         <span id="quoteAuthor"></span>
       </div>
+
       <div class="controls">
-        <button id="newQuote">✨ New Quote</button>
-        <button id="copyQuote">📋 Copy</button>
-        <button id="shareQuote">🔗 Share</button>
+        <button id="newQuote"><span class="icon">✨</span> New Quote</button>
+        <button id="copyQuote"><span class="icon">📋</span> Copy</button>
+        <button id="shareQuote"><span class="icon">🔗</span> Share</button>
       </div>
     </main>
 
@@ -38,9 +41,10 @@
     </footer>
   </div>
 
+  <!-- Logic -->
   <script src="script.js"></script>
   <script>
-    // Register Service Worker
+    // PWA: Register service worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js');
     }
